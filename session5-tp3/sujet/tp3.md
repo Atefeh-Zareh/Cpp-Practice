@@ -1,0 +1,124 @@
+
+
+# Introduction
+
+The goal of these exercises is to understand template
+programming. We will implement functions that do the union and the
+intersection of two containers. 
+
+*Warning*: similar functions are already available in the standard
+template library: `std::set_intersection` and `std::set_union`. We
+will use different names to avoid any confusion.
+
+
+## Definitions
+
+The intersection of two sets *A* and *B* is the set *C* that
+contains all the elements that are present in both sets:
+$$
+       C = A \cap B = { x | x \in A \wedge x \in B}
+   $$
+
+The union of two sets *A* and *B* is the set *C* that contains all
+the elements that are present in one of the two sets:
+$$
+       C = A \cup B = { x | x \in A \vee x \in B}
+   $$
+Set *C* does not contain twice the same element.
+
+The **final** goal is to implement these two functions in the most
+generic way: both functions should work on any type of container
+and on any type of data contained.
+
+
+# Question 1: vector of integers
+
+Write two functions, `set_intersection` and `set_union` that,
+starting from two set of integers, produce a vector that contains
+the intersection (the union, respectively) of the two integer vectors.
+
+Here is the prototype of function `set_intersection_nt()`:
+
+    void set_intersection_nt(std::vector<int>::const_iterator a_begin, 
+                             std::vector<int>::const_iterator a_end, 
+                             std::vector<int>::const_iterator b_begin, 
+                             std::vector<int>::const_iterator b_end,
+                             std::back_insert_iterator<std::vector<int>> c_begin);
+
+(`nt` means non-template). 
+The function will be used as in the following program: 
+
+    vector<int> vec_a = {1, 2, 3, 4};
+    vector<int> vec_b = {3, 4, 5, 6};
+    vector<int> vec_c;
+    
+    set_intersection_nt(begin(vec_a), end(vec_a), begin(vec_b), end(vec_b), 
+                        back_inserter(vec_c));
+
+The function `set_union_nt()` has the same prototype and it is used
+in the same way.
+
+Test the two functions, especially in the limit cases (null
+intersection, union of two identical sets, etc.)
+
+
+# Question 2: Generalisation on containers
+
+Generalize the functions by using templates, obtaining
+`set_intersection_t()` and `set_union_t()`. Two types of
+generalization:
+
+-   Type of the contained objects: for example, intersect vectors of strings.
+-   Type of container: for example, union of two lists, or a list and a vector.
+
+I ask you to do the two generalisations at the same time. In particular,
+with the same template function, it must be possible to do the intersection
+between two `vector<string>`, and between two `list<int>`. 
+
+Write tests to verify that this is the case. 
+
+
+# Question 3: Container of objects
+
+Create vectors and/or list of objects of type `MyClass`, and try to
+do intersections and unions with the functions you developed in the
+previous question. 
+
+What are the minimal characteristics of the class `MyClass` to make
+an union or an intersection?
+
+
+# Question 4
+
+Can we call `set_intersection_t()` on two containes that contain different types of objects? 
+
+If yes, why? If no, why? What are the minimal condition for making it work?
+
+
+# Question 5
+
+Try to apply your functions on  `map<int, string>`. Does it work? Why?
+
+
+# Question 6
+
+1.  Generalize function `set_intersection_t` with an additional template parameter `F`
+    which represent a comparison function between objects of the two containers.
+
+2.  Apply the new `set_intersection_t()` function on a `map<int,
+         string>` and on a `vector<int>`, the result will be produced into a `map<int, string>`:
+    
+        bool my_compare(const std::pair<int, string> &x, int y);
+        
+        map<int, string> a, b;
+        vector<int> v = {1, 3, 5};
+        
+        a[1] = "A"; a[2] = "B"; a[3] = "C"; a[4] = "D";
+        
+        set_intersection_t(begin(a), end(a), begin(v), end(v), 
+                         inserter(b, b.end()), my_compare); 
+        
+        // b should contain (1, "A") and (3, "C") and nothing else. 
+    
+    1.  Test the result
+

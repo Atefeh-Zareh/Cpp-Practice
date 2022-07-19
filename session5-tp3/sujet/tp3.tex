@@ -1,0 +1,217 @@
+% Created 2021-03-29 lun. 12:00
+% Intended LaTeX compiler: pdflatex
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage[english]{babel}
+\author{Giuseppe Lipari}
+\date{\today}
+\title{Conception Objets avancée : TP 3}
+\hypersetup{
+ pdfauthor={Giuseppe Lipari},
+ pdftitle={Conception Objets avancée : TP 3},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.2.2 (Org mode 9.1.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+\label{sec:orgc2ed1f0}
+
+Le but de ce TP est de comprendre la programmation par \emph{templates}.
+Nous allons implementer des fonctions pour faire l'union et
+l'intersection des deux containers.  
+
+\emph{Attention} : des fonctions similaires sont déjà disponibles dans la
+librairie standard : \texttt{std::set\_intersection} et
+\texttt{std::set\_union}. Nous utiliserons des noms un peu différents pour
+éviter toute confusion.
+
+
+\subsection*{Définitions}
+\label{sec:org7f24694}
+
+L'intersection de deux ensembles \emph{A} et \emph{B} est l'ensemble \emph{C} qui
+contient tous les éléments qui sont présents dans le deux ensembles :
+\[
+       C = A \cap B = { x | x \in A \wedge x \in B}
+   \]
+
+L'union de deux ensembles \emph{A} et \emph{B} est l'ensemble \emph{C} qui contient
+tous les éléments qui sont présents dans un de deux ensembles:
+\[
+       C = A \cup B = { x | x \in A \vee x \in B}
+   \]
+L'ensemble \emph{C} ne contient pas de doublons.
+
+L'objectif \textbf{final} est d'implanter ces deux fonctions de manière la
+plus générale possible : les fonctions doivent fonctionner sur
+n'importe quel container, et sur n'importe quel type de donnée
+contenue.
+
+
+\section*{Question 1: vecteurs d'entiers}
+\label{sec:org25407f2}
+
+Écrire deux fonctions, \texttt{set\_intersection} et \texttt{set\_union} qui, à
+partir de deux vecteurs d'entiers, remplissent un vecteur qui
+contient l'intersection (l'union, respectivement) de deux vecteurs
+d'entiers.
+
+Voici le prototype de la fonction \texttt{set\_intersection\_nt()} :
+
+\begin{minted}[]{c++}
+void set_intersection_nt(std::vector<int>::const_iterator a_begin, 
+                         std::vector<int>::const_iterator a_end, 
+                         std::vector<int>::const_iterator b_begin, 
+                         std::vector<int>::const_iterator b_end,
+                         std::back_insert_iterator<std::vector<int>> c_begin);
+\end{minted}
+(\texttt{nt} indique la version non-template). 
+La fonction sera utilisé comme dans le programme suivant: 
+
+\begin{minted}[]{c++}
+vector<int> vec_a = {1, 2, 3, 4};
+vector<int> vec_b = {3, 4, 5, 6};
+vector<int> vec_c;
+
+set_intersection_nt(begin(vec_a), end(vec_a), begin(vec_b), end(vec_b), 
+                    back_inserter(vec_c));
+\end{minted}
+
+La fonction \texttt{set\_union\_nt} a le même prototype et on l'utilise de la
+même manière.
+
+Testez les deux fonctions, surtout dans les cas limites (intersection
+nulle, l'union de deux ensembles vides, etc.) 
+
+\subsection*{Réponse}
+\label{sec:org8329b7f}
+
+\emph{Écrire ici votre réponse, et indiquez les tests que vous avez écrit.}
+
+
+\section*{Question 2: Généralisation sur les containers}
+\label{sec:org9ab3bdf}
+
+Généralisez les fonctions développé dans la question 2 en utilisant
+des templates. Il faut donc écrire deux fonctions templates,
+\texttt{set\_intersection(...)} et \texttt{set\_union(...)}.  Il y a deux type de
+généralisation possible :
+
+\begin{itemize}
+\item Type d'objet contenu : par exemple, faire l'intersection entre
+deux vecteurs de \texttt{string}.
+\item Type de container : par exemple, faire l'union entre deux \texttt{list<int>}.
+\end{itemize}
+
+Nous vous demandons de faire \uline{les deux généralisations} au même
+temps. En particulier, avec la même fonction template
+\texttt{set\_intersection}, il doit être possible de faire l'intersection
+entre deux \texttt{vector<string>}, et entre deux \texttt{list<int>}. 
+
+Écrire des tests pour vérifier cela. 
+
+\subsection*{Réponse}
+\label{sec:org95e3a92}
+
+\emph{Écrire votre réponse ici, et indiquez les tests que vous avez écrit.} 
+
+
+\section*{Question 3: Containers d'objets}
+\label{sec:org4bbbb08}
+
+Créer de vecteurs et des listes d'objets de type \texttt{MyClass}, et
+essayez de faire des intersections et des unions avec les fonctions
+développées dans la Question 2. Vérifiez que tout est correct.
+
+Quel sont les caracteristiques minimales de la classe pour
+pouvoir faire l'intersection et l'union ?
+
+\subsection*{Réponse}
+\label{sec:orgdff6ec8}
+
+\emph{Indiquez les test que vous avez développé}.
+\emph{Écrire ici les caractéristiques minimales de la class \texttt{MyClass}}.
+
+
+\section*{Question 4}
+\label{sec:orgdc4e9e1}
+
+Est-ce qu'on peut appeler \texttt{set\_intersection\_t} sur deux containers qui
+contiennent objets de type différents ? 
+
+Si non, pourquoi ? Si oui, quel sont le conditions minimales
+sur les types des objets, et quel est le résultat finale ?
+
+
+\subsection*{Réponse}
+\label{sec:org01f61df}
+
+\emph{Écrire ici votre réponse}. 
+
+
+\section*{Question 5}
+\label{sec:org25de977}
+
+Essayez d'appliquer vos fonctions sur des \texttt{map<int, string>}. 
+Est-ce que ça marche ? Si oui, pourquoi ? Si non, pourquoi ?
+
+\subsection*{Réponse}
+\label{sec:org739e169}
+
+\emph{Écrire ici votre réponse}. 
+
+
+\section*{Question 6}
+\label{sec:org211b09c}
+
+\begin{enumerate}
+\item Généraliser la fonction \texttt{set\_intersection\_t} avec un paramétre
+template additionnel \texttt{F} qui represents une fonction de
+comparaison entre les objets des deux containers.
+
+\item Appliquer la fonction \texttt{set\_intersection\_t} sur une \texttt{map<int,
+     string>} and sur un \texttt{vector<int>}, le resultat sera produit sur
+une \texttt{map<int, string>} :
+
+\begin{minted}[]{c++}
+bool my_compare(const std::pair<int, string> &x, int y);
+
+map<int, string> a, b;
+vector<int> v = {1, 3, 5};
+
+a[1] = "A"; a[2] = "B"; a[3] = "C"; a[4] = "D";
+
+set_intersection_t(begin(a), end(a), begin(v), end(v), 
+                 inserter(b, b.end()), my_compare); 
+
+// b should contain (1, "A") and (3, "C") and nothing else. 
+\end{minted}
+
+\begin{enumerate}
+\item Testez le résultat.
+\end{enumerate}
+\end{enumerate}
+
+
+\subsection*{Réponse}
+\label{sec:org3499c4b}
+
+\emph{Réponse dans le code} 
+\end{document}
